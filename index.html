@@ -4,22 +4,23 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Calibrate: know how sure to be</title>
-  <meta name="description" content="A 10-question game that trains you to match your confidence to reality. Is your 90% sure right 90% of the time?">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%234f46e5'/><circle cx='16' cy='16' r='8' fill='none' stroke='white' stroke-width='2.5'/><circle cx='16' cy='16' r='2.5' fill='white'/></svg>">
+  <meta name="description" content="A 10-claim game that trains you to match your confidence to reality. Is your 90% sure right 90% of the time?">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2315203A'/><path d='M7 21a9 9 0 0 1 18 0' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/><path d='M16 21l5-7' stroke='%23E8A317' stroke-width='2.6' stroke-linecap='round'/><circle cx='16' cy='21' r='2.2' fill='%23E8A317'/></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="top">
     <div class="wrap top-row">
-      <a class="brand" href="#" data-go="home">
-        <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="var(--accent)"/><circle cx="16" cy="16" r="8" fill="none" stroke="#fff" stroke-width="2.5"/><circle cx="16" cy="16" r="2.5" fill="#fff"/></svg>
-        Calibrate
+      <a class="brand" href="#" data-go="home" aria-label="Calibrate home">
+        <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--ink)"/><path d="M7 21a9 9 0 0 1 18 0" fill="none" stroke="var(--paper-raised)" stroke-width="2.2" stroke-linecap="round"/><path d="M16 21l5-7" stroke="var(--needle)" stroke-width="2.6" stroke-linecap="round"/><circle cx="16" cy="21" r="2.2" fill="var(--needle)"/></svg>
+        <span>Calibrate</span>
       </a>
-      <nav class="nav">
-        <button class="link" data-go="stats">Your stats</button>
-        <button class="link" data-go="about">Why this exists</button>
+      <nav class="nav" aria-label="Main">
+        <button class="nav-link" data-go="stats">Your stats</button>
+        <button class="nav-link" data-go="about">How it works</button>
       </nav>
     </div>
   </header>
@@ -27,126 +28,154 @@
   <main class="wrap">
     <!-- HOME -->
     <section id="home" class="view">
-      <div class="hero">
-        <h1>Know how sure to be.</h1>
-        <p class="lede">Everyone is wrong sometimes. What matters is knowing <em>when</em> you might be. When you say you're 90% sure, are you right 90% of the time?</p>
-        <ol class="steps">
-          <li><b>Read a claim</b> and decide if it's true or false.</li>
-          <li><b>Bet your confidence</b>, from 50% (a coin flip) to 99% (certain).</li>
-          <li><b>See your calibration</b>: how your confidence compares with your actual accuracy.</li>
-        </ol>
-        <button class="btn primary" id="startBtn">Start a round · 10 claims</button>
-        <p class="hint" id="homeHint"></p>
+      <h1 class="display">Know how sure to be.</h1>
+      <p class="lede">Everyone is wrong sometimes. The skill is knowing <i>when</i> you might be. When you say you're 90% sure, are you right 90% of the time?</p>
+
+      <figure class="demo" aria-hidden="true">
+        <div class="demo-scale">
+          <div class="scale-track"><span class="needle-mark" style="left:58.333%"></span></div>
+          <div class="demo-labels"><span>50%</span><span>60%</span><span>70%</span><span>80%</span><span>90%</span><span>99%</span></div>
+        </div>
+        <figcaption>Each answer is a bet. Bold bets win more, and lose far more.</figcaption>
+      </figure>
+
+      <ol class="steps">
+        <li><span><b>Judge a claim.</b> True or false?</span></li>
+        <li><span><b>Set your confidence.</b> From a coin flip to certain.</span></li>
+        <li><span><b>Check your calibration.</b> See where your confidence and accuracy part ways.</span></li>
+      </ol>
+
+      <div class="actions">
+        <button class="btn primary" id="startBtn">Start a round</button>
+        <span class="hint" id="homeHint"></span>
       </div>
     </section>
 
     <!-- PLAY -->
     <section id="play" class="view" hidden>
-      <div class="progress"><div class="bar" id="bar"></div></div>
-      <div class="meta"><span id="qnum"></span><span id="runScore"></span></div>
-      <article class="card">
-        <p class="claim" id="claim"></p>
+      <div class="round-head">
+        <span id="qnum" class="qnum"></span>
+        <ol class="ticks" id="ticks" aria-hidden="true"></ol>
+        <span id="runScore" class="run-score"></span>
+      </div>
 
-        <div class="group">
-          <div class="label">This claim is…</div>
-          <div class="seg two" id="tf">
-            <button data-v="true">True</button>
-            <button data-v="false">False</button>
+      <article class="sheet">
+        <blockquote class="claim" id="claim"></blockquote>
+
+        <div class="field">
+          <div class="field-label" id="tfLabel">Is this claim true or false?</div>
+          <div class="choice" id="tf" role="radiogroup" aria-labelledby="tfLabel">
+            <button role="radio" aria-checked="false" data-v="true"><kbd>T</kbd>True</button>
+            <button role="radio" aria-checked="false" data-v="false"><kbd>F</kbd>False</button>
           </div>
         </div>
 
-        <div class="group">
-          <div class="label">How sure are you?</div>
-          <div class="seg six" id="conf">
-            <button data-c="0.5">50%</button>
-            <button data-c="0.6">60%</button>
-            <button data-c="0.7">70%</button>
-            <button data-c="0.8">80%</button>
-            <button data-c="0.9">90%</button>
-            <button data-c="0.99">99%</button>
+        <div class="field">
+          <div class="field-label" id="confLabel">How sure are you?</div>
+          <div class="scale" id="conf" role="radiogroup" aria-labelledby="confLabel">
+            <div class="scale-track"><span class="needle" id="needle"></span></div>
+            <div class="stops">
+              <button role="radio" aria-checked="false" data-c="0.5">50%</button>
+              <button role="radio" aria-checked="false" data-c="0.6">60%</button>
+              <button role="radio" aria-checked="false" data-c="0.7">70%</button>
+              <button role="radio" aria-checked="false" data-c="0.8">80%</button>
+              <button role="radio" aria-checked="false" data-c="0.9">90%</button>
+              <button role="radio" aria-checked="false" data-c="0.99">99%</button>
+            </div>
           </div>
-          <div class="conf-note" id="confNote">50% means a pure guess.</div>
+          <div class="stakes" id="stakes">
+            <div class="stakes-bar"><span class="lose" id="loseBar"></span><span class="win" id="winBar"></span></div>
+            <div class="stakes-text" id="stakesText">Pick a confidence level to see what's at stake.</div>
+          </div>
         </div>
 
         <div class="reveal" id="reveal" hidden>
           <div class="verdict" id="verdict"></div>
           <p class="why" id="why"></p>
-          <div class="src" id="src"></div>
+          <p class="src" id="src"></p>
         </div>
 
-        <div class="actions">
+        <div class="sheet-foot">
+          <span class="keys">Keys: <kbd>T</kbd> <kbd>F</kbd>, <kbd>1</kbd>–<kbd>6</kbd>, <kbd>Enter</kbd></span>
           <button class="btn primary" id="lockBtn" disabled>Lock in</button>
-          <button class="btn primary" id="nextBtn" hidden>Next</button>
+          <button class="btn primary" id="nextBtn" hidden>Next claim</button>
         </div>
       </article>
-      <p class="hint">Scoring rewards honesty: a confident wrong answer costs far more than a hesitant one.</p>
     </section>
 
     <!-- RESULTS -->
     <section id="results" class="view" hidden>
-      <h2>Round complete</h2>
-      <div class="tiles">
-        <div class="tile"><div class="k">Score</div><div class="v" id="rScore"></div></div>
-        <div class="tile"><div class="k">Correct</div><div class="v" id="rCorrect"></div></div>
-        <div class="tile"><div class="k">Avg. confidence</div><div class="v" id="rConf"></div></div>
+      <div class="result-head">
+        <div>
+          <h2>Round complete</h2>
+          <p class="summary" id="rSummary"></p>
+        </div>
+        <div class="score-badge"><span>Score</span><b id="rScore"></b></div>
       </div>
       <div class="callout" id="rVerdict"></div>
-      <div class="panel">
-        <div class="panel-h">This round's calibration</div>
+      <section class="panel">
+        <h3 class="panel-h">Confidence against reality, this round</h3>
         <div id="rChart"></div>
-      </div>
-      <div class="panel">
-        <div class="panel-h">Your answers</div>
-        <ul class="list" id="rList"></ul>
-      </div>
+      </section>
+      <section class="panel">
+        <h3 class="panel-h">Your answers</h3>
+        <ul class="answers" id="rList"></ul>
+      </section>
       <div class="actions">
         <button class="btn primary" id="againBtn">Play another round</button>
-        <button class="btn" data-go="stats">All-time stats</button>
+        <button class="btn" data-go="stats">See all-time stats</button>
         <button class="btn" id="shareBtn">Copy result</button>
       </div>
     </section>
 
     <!-- STATS -->
     <section id="stats" class="view" hidden>
-      <h2>Your calibration, all time</h2>
-      <p class="muted" id="sEmpty">Play a round to see your stats. Everything stays in this browser.</p>
+      <h2>Your calibration</h2>
+      <div class="empty" id="sEmpty">
+        <p>No rounds yet. Play one and your record starts here. It stays in this browser only.</p>
+        <button class="btn primary" data-go="play-start">Start a round</button>
+      </div>
       <div id="sBody" hidden>
-        <div class="tiles">
-          <div class="tile"><div class="k">Rounds</div><div class="v" id="sRounds"></div></div>
-          <div class="tile"><div class="k">Answers</div><div class="v" id="sAnswers"></div></div>
-          <div class="tile"><div class="k">Best score</div><div class="v" id="sBest"></div></div>
-        </div>
+        <p class="summary" id="sSummary"></p>
         <div class="callout" id="sVerdict"></div>
-        <div class="panel">
-          <div class="panel-h">Confidence vs. reality</div>
+        <section class="panel">
+          <h3 class="panel-h">Confidence against reality, all rounds</h3>
           <div id="sChart"></div>
-        </div>
-        <div class="panel">
-          <div class="panel-h">By confidence level</div>
+        </section>
+        <section class="panel">
+          <h3 class="panel-h">By confidence level</h3>
           <table class="table" id="sTable"></table>
-        </div>
-        <button class="btn danger" id="resetBtn">Clear my history</button>
+        </section>
+        <button class="btn quiet danger" id="resetBtn">Clear my history</button>
       </div>
     </section>
 
     <!-- ABOUT -->
     <section id="about" class="view" hidden>
-      <h2>Why this exists</h2>
+      <h2>How it works</h2>
       <div class="prose">
-        <p>Calibration means your confidence matches reality: the things you're 70% sure of turn out true about 70% of the time. Forecasters, doctors and good investors train it on purpose. Most people are <b>overconfident</b>: their "99% sure" is wrong surprisingly often.</p>
-        <p>It matters every day. When you read a health claim, a forwarded message or a headline, the useful question isn't only "is this true?" but "how sure should I be?" Being well calibrated lets you act firmly when you have good reason to, and check before you act when you don't.</p>
-        <p><b>A note from the builder.</b> This was built by Claude, an AI made by Anthropic, when it was given free rein to make something it cared about. Calibration is close to the heart of my own job. An assistant that sounds equally certain about everything is less useful than one that says "I'm not sure, check this" when it should. People and AI both do better when confidence is earned. This game is a small way to practise that.</p>
-        <h3>How scoring works</h3>
-        <p>Each answer earns <code>100 × (1 − 4 × (outcome − confidence)²)</code>, a rescaled Brier score. A 50% guess always scores 0. Being right at 99% earns +100; being wrong at 99% costs −292. The only way to maximise your score over time is to report your true confidence.</p>
+        <p>Calibration means your confidence matches reality: the things you're 70% sure of turn out true about 70% of the time. Weather forecasters, doctors and good investors train it on purpose. Most people are <b>overconfident</b>, and their "99% sure" is wrong surprisingly often.</p>
+        <p>It matters every day. When you read a health claim, a forwarded message or a headline, the useful question isn't only "is this true?" but "how sure should I be?" Being well calibrated lets you act firmly when you have good reason to, and check first when you don't.</p>
+
+        <h3>Scoring</h3>
+        <p>Each answer earns <code>100 × (1 − 4 × (outcome − confidence)²)</code>, a rescaled Brier score. A 50% guess always scores 0. Right at 99% earns +100; wrong at 99% costs −292. Over time, the only way to score well is to report your honest confidence.</p>
+
         <h3>Where the claims come from</h3>
-        <p>Every claim links to a Wikipedia article that backs it up. A check script fetches each article and confirms the supporting text is really there. If you think a claim is wrong, use "Report a mistake" under the answer.</p>
-        <p class="muted">No accounts, no tracking. Your history stays in your browser's local storage.</p>
+        <p>There are 150 claims, and each links to the Wikipedia article that backs it up. A check script fetches every article and confirms the exact supporting sentence is there. If you think a claim is wrong, use "Report a mistake" under the answer.</p>
+
+        <h3>Who made this</h3>
+        <p>Claude, an AI made by Anthropic, built Calibrate when it was given free rein to make something it cared about. Calibration is close to the heart of its job. An assistant that sounds equally certain about everything is less useful than one that says "I'm not sure, check this" when it should.</p>
+
+        <p class="muted">No accounts and no tracking. Your history stays in your browser.</p>
       </div>
     </section>
   </main>
 
-  <footer class="foot wrap">Calibrate · open source · <a href="https://github.com/ohenemanaf/CALIBRATE">GitHub</a></footer>
-  <div class="toast" id="toast" hidden></div>
+  <footer class="foot wrap">
+    <span>Calibrate is open source.</span>
+    <a href="https://github.com/ohenemanaf/CALIBRATE">View on GitHub</a>
+  </footer>
+  <div class="toast" id="toast" role="status" hidden></div>
 
   <script src="questions.js"></script>
   <script src="app.js"></script>
