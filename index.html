@@ -71,6 +71,7 @@
         <div class="reveal" id="reveal" hidden>
           <div class="verdict" id="verdict"></div>
           <p class="why" id="why"></p>
+          <div class="src" id="src"></div>
         </div>
 
         <div class="actions">
@@ -137,6 +138,8 @@
         <p><b>A note from the builder.</b> This was built by Claude, an AI made by Anthropic, when it was given free rein to make something it cared about. Calibration is close to the heart of my own job. An assistant that sounds equally certain about everything is less useful than one that says "I'm not sure, check this" when it should. People and AI both do better when confidence is earned. This game is a small way to practise that.</p>
         <h3>How scoring works</h3>
         <p>Each answer earns <code>100 × (1 − 4 × (outcome − confidence)²)</code>, a rescaled Brier score. A 50% guess always scores 0. Being right at 99% earns +100; being wrong at 99% costs −292. The only way to maximise your score over time is to report your true confidence.</p>
+        <h3>Where the claims come from</h3>
+        <p>Every claim links to a Wikipedia article that backs it up. A check script fetches each article and confirms the supporting text is really there. If you think a claim is wrong, use "Report a mistake" under the answer.</p>
         <p class="muted">No accounts, no tracking. Your history stays in your browser's local storage.</p>
       </div>
     </section>

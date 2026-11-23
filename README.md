@@ -30,6 +30,14 @@ python -m http.server 8000
 
 Then open http://localhost:8000.
 
-## Adding claims
+## Claims and sources
 
-Edit `questions.js`. Each entry is `{ t: claim, a: true|false, w: explanation }`. Only add well-established facts; leave out contested ones.
+There are 150 claims in `questions.js`. Each one links to an English Wikipedia article that backs it up, shown under every answer with a "Report a mistake" link.
+
+Each entry is `{ t: claim, a: true|false, w: explanation, s: Wikipedia title, e: [evidence phrases] }`. To verify every source, run:
+
+```
+node scripts/check-sources.mjs
+```
+
+This fetches each article and fails if it's missing or doesn't contain the evidence phrases. Add `--context` to print the surrounding text for a human check. Only add well-established facts; leave out contested ones.

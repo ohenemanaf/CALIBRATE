@@ -119,6 +119,7 @@
     v.className = "verdict " + (correct ? "good" : "bad");
     v.textContent = `${correct ? "Correct" : "Wrong"}: it's ${c.a ? "true" : "false"} · ${pts > 0 ? "+" : ""}${pts}`.replace("-", "−");
     $("why").textContent = c.w;
+    $("src").innerHTML = sourceLinks(c);
     $("reveal").hidden = false;
     $("lockBtn").hidden = true;
     $("nextBtn").hidden = false;
@@ -165,7 +166,7 @@
       const cls = x.pts > 0 ? "good" : x.pts < 0 ? "bad" : "zero";
       return `<li>
         <span class="mark ${x.correct ? "good" : "bad"}">${x.correct ? "✓" : "✗"}</span>
-        <div><div class="txt">${esc(c.t)}</div><div class="sub">You said ${x.pick ? "true" : "false"} at ${fmtConf(x.conf)}. It's ${c.a ? "true" : "false"}.</div></div>
+        <div><div class="txt">${esc(c.t)}</div><div class="sub">You said ${x.pick ? "true" : "false"} at ${fmtConf(x.conf)}. It's ${c.a ? "true" : "false"}. <a href="${wikiUrl(c.s)}" target="_blank" rel="noopener">Source</a></div></div>
         <span class="pill ${cls}">${x.pts > 0 ? "+" : ""}${String(x.pts).replace("-", "−")}</span>
       </li>`;
     }).join("");
@@ -244,6 +245,18 @@
     save();
     renderStats();
   });
+
+  // ---------- sources ----------
+  const REPO = "https://github.com/ohenemanaf/CALIBRATE";
+  function wikiUrl(title) {
+    return "https://en.wikipedia.org/wiki/" + encodeURIComponent(title.replace(/ /g, "_")).replace(/%2C/g, ",");
+  }
+  function sourceLinks(c) {
+    const issue = `${REPO}/issues/new?title=${encodeURIComponent("Claim check: " + c.t)}&body=${encodeURIComponent(
+      `Claim: ${c.t}\nApp says: ${c.a ? "true" : "false"}\nSource: ${wikiUrl(c.s)}\n\nWhat's wrong:\n`)}`;
+    return `Source: <a href="${wikiUrl(c.s)}" target="_blank" rel="noopener">${esc(c.s)} (Wikipedia)</a>` +
+      ` · <a href="${issue}" target="_blank" rel="noopener">Report a mistake</a>`;
+  }
 
   // ---------- misc ----------
   function esc(s) { return s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
